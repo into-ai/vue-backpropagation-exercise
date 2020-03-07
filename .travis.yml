@@ -1,34 +1,30 @@
 language: node_js
 node_js:
-  - "stable"
-
+- stable
 before_script:
-  - npm install
-
+- npm install
 jobs:
   include:
   - stage: deploy
-    name: "Deploy to GitHub Pages"
+    name: Deploy to GitHub Pages
     script: npm run build && touch dist/.nojekyll
     deploy:
       provider: pages
       local_dir: dist
       skip_cleanup: true
-      # Generate a GitHub access token for public repositories
-      # In your travis ci settings, set the token as a secret environment variable $GH_TOKEN
       token: "$GH_TOKEN"
       keep_history: true
       on:
         branch: master
-  
   - stage: deploy
-    name: "Deploy to NPM"
+    name: Deploy to NPM
     script:
-      - npm run build:npm
+    - npm run build:npm
     deploy:
       provider: npm
-      email: "introintoai@gmail.com"
-      api_key: "YOUR_AUTH_TOKEN"
+      email: introintoai@gmail.com
+      api_key:
+        secure: RpZxkZC0f0hJGheDV/1wJMPGUWs7Ri7ydLKam4ePAqCYaZNGW4nuXQnhAjh9G39XnHXrCKLlmpWuW3LhzoukqzJBM0M9USHSIzt+QAkviLZoKFgBt6hlQbyihPzU4F3V9+mx43gE+7JolfbRQwSyUkGroLbQcfv0u66XkitOggksLXdbldelZSNFflE2qZk3zt16uSAM7zA6Qxhkg2NXYbREuxJqmrWwgjvry3YzD4aSKbdZqm3F3Ya5Dk8JdneDUcgBuIhxFAggL2V6WO8nqIgpzKuZ2ywmZnAP+SLR87q4jVHzHWTN/C+J7ZRA7N6itSVtgs3LgYHfE4GNZvPBL8QdVOZozIkuhzs0F806agZyWucMy4QNOZDvVTPEW4DvWJ9rnlnlV4qWrxceFvWVvedqEGTedZlKdaxyuJjP02Al/QBZ9cb6tgcBnyQQcYlloFBs4iNq7+qe96PaMMBVt8J+343Q7npRAa96DIyEpAjvPXdvxhqSCZjqBVRIxh1vKOpBLkcm7Z41t0Or8jPRntGVRK/86rkB4fRWvo+j5a+C3djq7656c6ncauQU8gNwIELZwzaySR2jkMTYQV4571CHKkr+4Ud6UtwvXlKfCWab+C0K/uiR58CGHHmoUZTv/rCj5ZmX7n0cnkH4YglRRHTh5EVW8iqB/4eaVw3RDhA=
       project: ./dist/
       skip_cleanup: true
       tag: next

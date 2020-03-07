@@ -1,13 +1,13 @@
 {
-  "name": "backpropexample",
+  "name": "vue-backpropagation-exercise",
   "version": "0.1.0",
   "description": "Web based exercise about visually retracing the backpropagation steps performed when training neural nets.",
   "private": false,
   "author": {
-    "name": "intoAI"
+    "name": "into-ai"
   },
-  "repository": "https://github.com/username/project",
-  "bugs": "https://github.com/username/vproject/issues",
+  "repository": "https://github.com/into-ai/vue-backpropagation-exercise",
+  "bugs": "https://github.com/into-ai/vue-backpropagation-exercise/issues",
   "keywords": [
     "backpropagation",
     "mooc",
