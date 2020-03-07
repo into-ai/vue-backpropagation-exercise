@@ -1,6 +1,9 @@
 ## Vue Backpropagation Exercise
 
 [![Build Status](https://travis-ci.com/into-ai/vue-backpropagation-exercise.svg?branch=master)](https://travis-ci.com/into-ai/vue-backpropagation-exercise)
+[![NPM License](https://img.shields.io/npm/l/vue-backpropagation-exercise)](https://www.npmjs.com/package/vue-backpropagation-exercise)
+[![NPM version](https://img.shields.io/npm/v/vue-backpropagation-exercise)](https://www.npmjs.com/package/vue-backpropagation-exercise)
+[![NPM Downloads](https://img.shields.io/npm/dy/vue-backpropagation-exercise)](https://www.npmjs.com/package/vue-backpropagation-exercise)
 
 This vue component packages an interactive web based exercise about visually retracing the backpropagation steps performed when training neural nets. See a [live demo](https://into-ai.github.io/vue-backpropagation-exercise).
 
