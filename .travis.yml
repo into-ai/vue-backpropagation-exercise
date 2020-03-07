@@ -1,0 +1,37 @@
+language: node_js
+node_js:
+  - "stable"
+
+before_script:
+  - npm install
+
+jobs:
+  include:
+  - stage: deploy
+    name: "Deploy to GitHub Pages"
+    script: npm run build && touch dist/.nojekyll
+    deploy:
+      provider: pages
+      local_dir: dist
+      skip_cleanup: true
+      # Generate a GitHub access token for public repositories
+      # In your travis ci settings, set the token as a secret environment variable $GH_TOKEN
+      token: "$GH_TOKEN"
+      keep_history: true
+      on:
+        branch: master
+  
+  - stage: deploy
+    name: "Deploy to NPM"
+    script:
+      - npm run build:npm
+    deploy:
+      provider: npm
+      email: "introintoai@gmail.com"
+      api_key: "YOUR_AUTH_TOKEN"
+      project: ./dist/
+      skip_cleanup: true
+      tag: next
+      on:
+        branch: master
+        tags: true
