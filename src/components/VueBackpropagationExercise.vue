@@ -801,6 +801,7 @@ E &= {(${netOut} - ${expectedOut})}^2 \\\\
 </script>
 
 <style scoped lang="sass">
+@import '~katex/dist/katex.min.css'
 $red: #c9485b
 $green: #8cba51
 
