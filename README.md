@@ -68,3 +68,10 @@ For an example configuration, see `src/App.vue`.
     ```
     npm run lint
     ```
+
+#### Publishing to NPM
+Tagged commits to the master branch are automatically published to NPM. You can tag a commit using the `npm` cli:
+```bash
+npm version patch -m "Bump the version number"
+git push origin master --follow-tags
+```
