@@ -29,7 +29,7 @@ export const translations: { [key: string]: Map<L, string> } = {
   ]),
   missingValues: new Map([
     [L.DE, "Es fehlen {0} Eingabewert(e)!"],
-    [L.EN, `The number {0} you entered is not a valid number!`]
+    [L.EN, `{0} value(s) are missing!`]
   ]),
   wrongFFValue: new Map([
     [
@@ -76,7 +76,7 @@ export const translations: { [key: string]: Map<L, string> } = {
     ],
     [
       L.EN,
-      "Thanks for taking the time for this exercise! Your results were successfully transmitted!"
+      "Thank you for taking the time for this exercise! Your results were successfully transmitted!"
     ]
   ]),
   whywow: new Map([
