@@ -16,8 +16,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import VueBackpropagationExercise, {
-  BackpropGraph,
-  round2d
+  BackpropGraph
 } from "./components/VueBackpropagationExercise.vue";
 
 @Component({
@@ -60,7 +59,9 @@ export default class App extends Vue {
   }
 
   errorFunction(observed: number, expected: number): number {
-    return round2d(Math.pow(round2d(observed) - round2d(expected), 2));
+    // observed and expected have been rounded to two digits
+    // the return value will also be rounded to 2 digits
+    return Math.pow(observed - expected, 2);
   }
 
   handleSubmit(values: {

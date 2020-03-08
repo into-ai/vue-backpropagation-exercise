@@ -261,9 +261,11 @@ export default class VueBackpropagationExercise extends Vue {
         this.ffOverrides[this.inputId(d, Step.FF)] = d.data?.ffValue;
     });
 
-    this.initialNetError = this.netErrorHandler(
-      this.feedforward(this.root, undefined, true).out,
-      this.expectedOut
+    this.initialNetError = round2d(
+      this.netErrorHandler(
+        round2d(this.feedforward(this.root, undefined, true).out),
+        round2d(this.expectedOut)
+      )
     );
   }
 
@@ -545,7 +547,9 @@ export default class VueBackpropagationExercise extends Vue {
   updateError(observed: number, expected: number): void {
     const netOut = round2d(observed);
     const expectedOut = round2d(expected);
-    this.totalNetError = this.netErrorHandler(netOut, expectedOut);
+    this.totalNetError = round2d(
+      this.netErrorHandler(round2d(netOut), round2d(expectedOut))
+    );
     const totalErrorText = document.getElementById("net_error") as HTMLElement;
     if (totalErrorText != undefined && totalErrorText != null) {
       const errorTex = `
