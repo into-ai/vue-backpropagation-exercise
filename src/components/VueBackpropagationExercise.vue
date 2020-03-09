@@ -60,7 +60,8 @@
               class="weight-change"
               :class="[weightChange.value >= 0 ? 'positive' : 'negative']"
               >{{ weightChange.formatted }}</span
-            >) {{ tl("yieldsError") }} {{ totalNetError.toFixed(2) }} (<span
+            >) {{ tl("yieldsError") }}
+            {{ totalNetError.toFixed(errorPrecisionDigits) }} (<span
               class="weight-change"
               :class="[costChange.value >= 0 ? 'positive' : 'negative']"
               >{{ costChange.formatted }}</span
@@ -87,7 +88,13 @@ import * as d3 from "d3";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import katex from "katex";
 import { diagonal, linePointAt } from "@/geometry";
-import { formatString, round2d, fixedNd, parseFloatStrict } from "@/utils";
+import {
+  formatString,
+  round2d,
+  roundNd,
+  fixedNd,
+  parseFloatStrict
+} from "@/utils";
 import { translations } from "@/translations";
 import { Point, BackpropGraph, Language, Step } from "@/interfaces";
 export * from "@/interfaces";
@@ -123,6 +130,7 @@ export default class VueBackpropagationExercise extends Vue {
     observed: number,
     expected: number
   ) => number;
+  @Prop({ default: 5 }) protected errorPrecisionDigits!: number;
   @Prop({ default: 500 }) protected width!: number;
   @Prop({ default: 300 }) protected height!: number;
   @Prop({ default: 600 }) protected animationDuration!: number;
@@ -214,12 +222,14 @@ export default class VueBackpropagationExercise extends Vue {
   }
 
   get costChange(): { value: number; formatted: string } {
-    let costChangePercent =
-      (1 - this.initialNetError / this.totalNetError) * 100;
-    costChangePercent =
-      isFinite(costChangePercent) && !isNaN(costChangePercent)
-        ? costChangePercent
-        : 0;
+    const costChangePercent =
+      (1 -
+        this.initialNetError /
+          Math.max(
+            this.totalNetError,
+            1.0 / Math.pow(10, this.errorPrecisionDigits)
+          )) *
+      100;
     return {
       value: costChangePercent,
       formatted: `${costChangePercent >= 0 ? "+" : ""}${round2d(
@@ -261,11 +271,15 @@ export default class VueBackpropagationExercise extends Vue {
         this.ffOverrides[this.inputId(d, Step.FF)] = d.data?.ffValue;
     });
 
-    this.initialNetError = round2d(
+    this.initialNetError = roundNd(
       this.netErrorHandler(
-        round2d(this.feedforward(this.root, undefined, true).out),
-        round2d(this.expectedOut)
-      )
+        roundNd(
+          this.feedforward(this.root, undefined, true).out,
+          this.errorPrecisionDigits
+        ),
+        roundNd(this.expectedOut, this.errorPrecisionDigits)
+      ),
+      this.errorPrecisionDigits
     );
   }
 
@@ -547,8 +561,12 @@ export default class VueBackpropagationExercise extends Vue {
   updateError(observed: number, expected: number): void {
     const netOut = round2d(observed);
     const expectedOut = round2d(expected);
-    this.totalNetError = round2d(
-      this.netErrorHandler(round2d(netOut), round2d(expectedOut))
+    this.totalNetError = roundNd(
+      this.netErrorHandler(
+        roundNd(netOut, this.errorPrecisionDigits),
+        roundNd(expectedOut, this.errorPrecisionDigits)
+      ),
+      this.errorPrecisionDigits
     );
     const totalErrorText = document.getElementById("net_error") as HTMLElement;
     if (totalErrorText != undefined && totalErrorText != null) {
@@ -597,15 +615,7 @@ E &= {(${netOut} - ${expectedOut})}^2 \\\\
     // Normalize for fixed-depth.
     this.nodes.forEach(d => {
       const factorW = this.width / (source.height + 1);
-      if (d.children) {
-        d.y = (source.height - d.depth) * factorW;
-      } else {
-        d.y = 0;
-        if (d.depth < source.height) {
-          // Fix height
-          d.x = d.x - 10;
-        }
-      }
+      d.y = (source.height - d.depth) * factorW;
     });
 
     // ****************** Nodes section ***************************

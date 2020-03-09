@@ -3,6 +3,13 @@ export interface Point {
   y: number;
 }
 
+export interface Example {
+  errorHandler: (observed: number, expected: number) => number;
+  netFuncTex: string;
+  errFuncTex: string;
+  netTree: BackpropGraph;
+}
+
 export interface Graph {
   func: string;
   nodeId: number;
