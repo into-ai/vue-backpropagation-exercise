@@ -30,11 +30,25 @@ import Example from "./examples/example2";
 export default class App extends Vue {
   protected example = Example;
 
-  handleSubmit(values: {
-    [key: string]: number;
-  }): { valid: boolean; message?: string } {
-    console.log(values);
-    return { valid: true };
+  handleSubmit(
+    result: {
+      [key: string]: number;
+    },
+    expected: {
+      [key: string]: number;
+    }
+  ): { valid: boolean; message?: string } {
+    // ToDo: Possible validation call to your custom backend
+    let secret = "";
+    const valid: boolean = JSON.stringify(result) === JSON.stringify(expected);
+    if (valid) {
+      secret = "8";
+    }
+
+    return {
+      valid: valid,
+      message: secret
+    };
   }
 }
 </script>
@@ -47,5 +61,8 @@ export default class App extends Vue {
   font-size: 1em
   text-align: center
   color: #2c3e50
-  margin: 60px 0
+  margin: 60px auto
+  width: 80%
+  min-width: 800px
+  padding: 0px 20px
 </style>

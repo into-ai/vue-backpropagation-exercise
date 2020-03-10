@@ -30,7 +30,9 @@
         <span class="debug-button" @click="feedforward(root)"
           >Debug: Add FF</span
         >
-        <span class="debug-button" @click="debugBP(false)">Debug: Add BP</span>
+        <span class="debug-button" @click="backpropagation()"
+          >Debug: Add BP</span
+        >
       </div>
       <div>
         <div v-show="this.currentStep === 'WOW'" class="weight-slider-controls">
@@ -123,9 +125,14 @@ export default class VueBackpropagationExercise extends Vue {
   @Prop() private editable!: string;
   @Prop() private debug?: boolean;
   @Prop({ default: Language.EN }) private lang!: Language | string;
-  @Prop() private submissionValidator!: (values: {
-    [key: string]: number;
-  }) => { valid: boolean; message?: string };
+  @Prop() private submissionValidator!: (
+    result: {
+      [key: string]: number;
+    },
+    expected: {
+      [key: string]: number;
+    }
+  ) => { valid: boolean; message?: string };
   @Prop({ default: () => defaultErrorFunction }) protected netErrorHandler!: (
     observed: number,
     expected: number
@@ -283,20 +290,6 @@ export default class VueBackpropagationExercise extends Vue {
     );
   }
 
-  debugBP(correct: boolean): void {
-    this.links.forEach(d => {
-      const inputId = this.inputId(d, Step.BP);
-      const bpInput = document.getElementById(inputId) as HTMLInputElement;
-      if (
-        d.data.bpValue === undefined &&
-        bpInput != null &&
-        bpInput != undefined
-      ) {
-        bpInput.value = correct ? "1" : "1";
-      }
-    });
-  }
-
   inputId(d: d3.HierarchyPointNode<BackpropGraph>, step: Step) {
     return `${step === Step.FF ? "ff" : "bp"}_${d.data.nodeId}_to_${d.parent
       ?.data?.nodeId ?? "undefined"}`;
@@ -397,14 +390,24 @@ export default class VueBackpropagationExercise extends Vue {
       this.updateError(netOut, this.expectedOut);
     } else if (this.currentStep == Step.BP) {
       if (!this.validBPInputValues()) return;
-      const validation = this.submissionValidator(this.collectBPInputValues());
-      this.submitted = true;
-      alert(validation.message ?? this.tl("thanks"));
+
+      const result = this.collectBPInputValues();
+      const expected = this.backpropagation();
+      console.log(result);
+      console.log(expected);
+      const validation = this.submissionValidator(result, expected);
+      alert(this.tl("thanks"));
+
       if (validation.valid) {
-        // Do not proceed to the WOW stage with wrong values
+        // Do not proceed to the WOW stage with wrong values and dont send secret
+        alert(this.tl("resultSuccess") + validation.message);
+        this.submitted = true;
+
         alert(this.tl("whywow"));
         this.toggleStep(Step.WOW);
         this.currentStep = Step.WOW;
+      } else {
+        alert(this.tl("resultError"));
       }
     }
   }
@@ -556,6 +559,53 @@ export default class VueBackpropagationExercise extends Vue {
       out: ffValue,
       acc: acc
     };
+  }
+
+  backpropagation(): Record<string, number> {
+    const expectedValues: { [key: string]: number } = {};
+
+    this.links.forEach(d => {
+      const inputBpId = this.inputId(d, Step.BP);
+      const inputFfId = this.inputId(d, Step.FF);
+      const ffInput = document.getElementById(inputFfId) as HTMLInputElement;
+      const bpInput = document.getElementById(inputBpId) as HTMLInputElement;
+      let siblingFfValue = 1;
+
+      if (d.parent) {
+        const parentInputId = this.inputId(d.parent, Step.BP);
+        const parentBpInput = document.getElementById(
+          parentInputId
+        ) as HTMLInputElement;
+        let parentBpValue: number;
+
+        parentBpInput != null
+          ? (parentBpValue = +parentBpInput.value)
+          : (parentBpValue = 1);
+
+        d.parent.children?.forEach(child => {
+          if (child.data.nodeId != d.data.nodeId) {
+            const sibling = document.getElementById(
+              `ff_${child.data.nodeId}_to_${child.parent?.data.nodeId}`
+            ) as HTMLInputElement;
+            siblingFfValue = +sibling.value;
+          }
+        });
+
+        const inputValues: Record<string, number> = {
+          ff: +ffInput.value,
+          parentBp: parentBpValue,
+          siblingFf: siblingFfValue
+        };
+
+        if (d.parent.data.derivative) {
+          if (this.debug)
+            bpInput.value = d.parent.data.derivative(inputValues).toString();
+          expectedValues[inputBpId] = parseFloatStrict(bpInput.value);
+        }
+      }
+    });
+
+    return expectedValues;
   }
 
   updateError(observed: number, expected: number): void {
@@ -823,7 +873,7 @@ $green: #8cba51
   display: inline-block
   position: relative
   margin: 0 auto
-  width: 1000px
+  width: 100%
 
   .positive
     color: $green
@@ -872,7 +922,7 @@ $green: #8cba51
     border: 2px solid black
 
   .controls
-    padding: 10px
+    padding: 10px 0px
 
   .bottom-controls
     width: 100%
@@ -912,6 +962,7 @@ $green: #8cba51
     float: right
     color: white
     padding: 7px
+    margin-right: 0px
     border-radius: 5px
 
     &.disabled

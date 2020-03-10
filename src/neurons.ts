@@ -24,3 +24,17 @@ export const multFunc = (c: number[]): number => {
 export const leafFunc = (): number => {
   return NaN;
 };
+
+export const addFuncDerivative = (
+  inputValues: Record<string, number>
+): number => {
+  return inputValues.parentBp;
+};
+
+export const multFuncDerivative = (
+  inputValues: Record<string, number>
+): number => {
+  const result: number = inputValues.siblingFf * inputValues.parentBp;
+
+  return +result.toFixed(2);
+};
