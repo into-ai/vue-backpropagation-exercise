@@ -81,25 +81,16 @@ export const translations: { [key: string]: Map<L, string> } = {
   ]),
 
   resultSuccess: new Map([
-    [
-      L.DE,
-      "Deine Werte wurden alle korrekt berechnet, du erhälst somit den geheimen Zahlencode, den du im Bonusquiz als Antwort verwenden musst. \n Zahlencode: "
-    ],
-    [
-      L.EN,
-      "All your values were calculated correctly and you receive the secret number which you can use as an answer in the bonus quiz. \n Secret number: "
-    ]
+    [L.DE, "Deine Werte sind alle korrekt! Sehr gut gemacht!"],
+    [L.EN, "All your values are correct! Good job!"]
   ]),
 
   resultError: new Map([
     [
       L.DE,
-      "Die Werte sind leider nicht korrekt und wir können dir den Zahlencode nicht zusenden. Versuche die Werte erneut zu berechnen. Du hast so viele Versuche wie du brauchst."
+      "Die Werte sind leider nicht alle korrekt. Versuche es doch noch einmal, du hast so viele Versuche wie du brauchst."
     ],
-    [
-      L.EN,
-      "Not all your values were calculated correctly and we can't send you the secret number. Try again, you have as much attempts as you need."
-    ]
+    [L.EN, "Not all your values are correct. Try again and take your time!"]
   ]),
 
   whywow: new Map([

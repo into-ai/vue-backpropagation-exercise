@@ -38,16 +38,19 @@ export default class App extends Vue {
       [key: string]: number;
     }
   ): { valid: boolean; message?: string } {
-    // ToDo: Possible validation call to your custom backend
-    let secret = "";
-    const valid: boolean = JSON.stringify(result) === JSON.stringify(expected);
-    if (valid) {
-      secret = "8";
+    // Automatic validation based on derivatives if available
+    if (result.length == expected.length) {
+      const valid: boolean =
+        JSON.stringify(result) === JSON.stringify(expected);
+      return {
+        valid: valid
+      };
     }
 
+    // Handle possible validation call to your custom backend
     return {
-      valid: valid,
-      message: secret
+      valid: false,
+      message: "Cannot auto validate. Connect your own backend!"
     };
   }
 }

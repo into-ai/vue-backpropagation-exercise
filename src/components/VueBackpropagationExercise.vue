@@ -392,9 +392,7 @@ export default class VueBackpropagationExercise extends Vue {
       if (!this.validBPInputValues()) return;
 
       const result = this.collectBPInputValues();
-      const expected = this.backpropagation();
-      console.log(result);
-      console.log(expected);
+      const expected = this.backpropagation(true);
       const validation = this.submissionValidator(result, expected);
       alert(this.tl("thanks"));
 
@@ -561,7 +559,7 @@ export default class VueBackpropagationExercise extends Vue {
     };
   }
 
-  backpropagation(): Record<string, number> {
+  backpropagation(quiet?: boolean): Record<string, number> {
     const expectedValues: { [key: string]: number } = {};
 
     this.links.forEach(d => {
@@ -571,7 +569,11 @@ export default class VueBackpropagationExercise extends Vue {
       const bpInput = document.getElementById(inputBpId) as HTMLInputElement;
       let siblingFfValue = 1;
 
-      if (d.parent) {
+      if (
+        d.parent &&
+        (expectedValues[this.inputId(d.parent, Step.BP)] != undefined ||
+          d.parent.data.bpValue != undefined)
+      ) {
         const parentInputId = this.inputId(d.parent, Step.BP);
         const parentBpInput = document.getElementById(
           parentInputId
@@ -598,9 +600,9 @@ export default class VueBackpropagationExercise extends Vue {
         };
 
         if (d.parent.data.derivative) {
-          if (this.debug)
-            bpInput.value = d.parent.data.derivative(inputValues).toString();
-          expectedValues[inputBpId] = parseFloatStrict(bpInput.value);
+          const correct = d.parent.data.derivative(inputValues);
+          if (!(quiet === true)) bpInput.value = correct.toString();
+          expectedValues[inputBpId] = correct;
         }
       }
     });
