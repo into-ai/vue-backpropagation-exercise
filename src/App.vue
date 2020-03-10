@@ -36,17 +36,12 @@ export default class App extends Vue {
     },
     expected: {
       [key: string]: number;
-    }
+    },
+    valid?: boolean
   ): { valid: boolean; message?: string } {
-    // Automatic validation based on derivatives if available
-    if (result.length == expected.length) {
-      const valid: boolean =
-        JSON.stringify(result) === JSON.stringify(expected);
-      return {
-        valid: valid
-      };
+    if (valid != undefined) {
+      return { valid: valid };
     }
-
     // Handle possible validation call to your custom backend
     return {
       valid: false,

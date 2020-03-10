@@ -64,7 +64,7 @@ const example: Example = {
                 func: "\\cdot",
                 nodeId: 3,
                 accumulate: multFunc,
-                // derivative: multFuncDerivative,
+                derivative: multFuncDerivative,
                 children: [
                   {
                     func: "w_4",

@@ -131,7 +131,8 @@ export default class VueBackpropagationExercise extends Vue {
     },
     expected: {
       [key: string]: number;
-    }
+    },
+    valid?: boolean
   ) => { valid: boolean; message?: string };
   @Prop({ default: () => defaultErrorFunction }) protected netErrorHandler!: (
     observed: number,
@@ -393,12 +394,17 @@ export default class VueBackpropagationExercise extends Vue {
 
       const result = this.collectBPInputValues();
       const expected = this.backpropagation(true);
-      const validation = this.submissionValidator(result, expected);
+      // Automatic validation based on derivatives if available
+      let valid: boolean | undefined;
+      if (result.length == expected.length) {
+        valid = JSON.stringify(result) === JSON.stringify(expected);
+      }
+      const validation = this.submissionValidator(result, expected, valid);
       alert(this.tl("thanks"));
 
       if (validation.valid) {
         // Do not proceed to the WOW stage with wrong values and dont send secret
-        alert(this.tl("resultSuccess") + validation.message);
+        alert(`${this.tl("resultSuccess")}\n${validation.message ?? ""}`);
         this.submitted = true;
 
         alert(this.tl("whywow"));
