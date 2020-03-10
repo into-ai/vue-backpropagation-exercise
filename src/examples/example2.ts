@@ -1,5 +1,12 @@
 import { Example } from "../interfaces";
-import { errorFunction, addFunc, multFunc, leafFunc } from "../neurons";
+import {
+  errorFunction,
+  addFunc,
+  multFunc,
+  leafFunc,
+  addFuncDerivative,
+  multFuncDerivative
+} from "../neurons";
 
 const powThreeQuarterFunc = (c: number[]): number => {
   if (c.length != 1) {
@@ -8,6 +15,15 @@ const powThreeQuarterFunc = (c: number[]): number => {
     );
   }
   return Math.pow(c[0], 0.75);
+};
+
+export const powThreeQuarterFuncDerivative = (
+  inputValues: Record<string, number>
+): number => {
+  const result: number =
+    (3 / (4 * Math.pow(inputValues.ff, 1 / 4))) * inputValues.parentBp;
+
+  return +result.toFixed(2);
 };
 
 const example: Example = {
@@ -30,21 +46,25 @@ const example: Example = {
     nodeId: 0,
     bpValue: 1,
     accumulate: powThreeQuarterFunc,
+    derivative: powThreeQuarterFuncDerivative,
     children: [
       {
         func: "+",
         nodeId: 1,
         accumulate: addFunc,
+        derivative: addFuncDerivative,
         children: [
           {
             func: "+",
             nodeId: 2,
             accumulate: addFunc,
+            derivative: addFuncDerivative,
             children: [
               {
                 func: "\\cdot",
                 nodeId: 3,
                 accumulate: multFunc,
+                // derivative: multFuncDerivative,
                 children: [
                   {
                     func: "w_4",
@@ -56,21 +76,25 @@ const example: Example = {
                     func: "x^{3/4}",
                     nodeId: 5,
                     accumulate: powThreeQuarterFunc,
+                    derivative: powThreeQuarterFuncDerivative,
                     children: [
                       {
                         func: "+",
                         nodeId: 6,
                         accumulate: addFunc,
+                        derivative: addFuncDerivative,
                         children: [
                           {
                             func: "+",
                             nodeId: 7,
                             accumulate: addFunc,
+                            derivative: addFuncDerivative,
                             children: [
                               {
                                 func: "\\cdot",
                                 nodeId: 8,
                                 accumulate: multFunc,
+                                derivative: multFuncDerivative,
                                 children: [
                                   {
                                     func: "w_0",
@@ -90,6 +114,7 @@ const example: Example = {
                                 func: "\\cdot",
                                 nodeId: 11,
                                 accumulate: multFunc,
+                                derivative: multFuncDerivative,
                                 children: [
                                   {
                                     func: "w_1",
@@ -123,6 +148,7 @@ const example: Example = {
                 func: "\\cdot",
                 nodeId: 15,
                 accumulate: multFunc,
+                derivative: multFuncDerivative,
                 children: [
                   {
                     func: "w_5",
@@ -134,31 +160,35 @@ const example: Example = {
                     func: "x^{3/4}",
                     nodeId: 17,
                     accumulate: powThreeQuarterFunc,
+                    derivative: powThreeQuarterFuncDerivative,
                     children: [
                       {
                         func: "+",
                         nodeId: 18,
                         accumulate: addFunc,
+                        derivative: addFuncDerivative,
                         children: [
                           {
                             func: "+",
                             nodeId: 19,
                             accumulate: addFunc,
+                            derivative: addFuncDerivative,
                             children: [
                               {
                                 func: "\\cdot",
-                                nodeId: 7,
+                                nodeId: 20,
                                 accumulate: multFunc,
+                                derivative: multFuncDerivative,
                                 children: [
                                   {
                                     func: "w_2",
-                                    nodeId: 20,
+                                    nodeId: 21,
                                     ffValue: 1.2,
                                     accumulate: leafFunc
                                   },
                                   {
                                     func: "x_0",
-                                    nodeId: 21,
+                                    nodeId: 22,
                                     ffValue: 5,
                                     accumulate: leafFunc
                                   }
@@ -166,18 +196,19 @@ const example: Example = {
                               },
                               {
                                 func: "\\cdot",
-                                nodeId: 22,
+                                nodeId: 23,
                                 accumulate: multFunc,
+                                derivative: multFuncDerivative,
                                 children: [
                                   {
                                     func: "w_3",
-                                    nodeId: 23,
+                                    nodeId: 24,
                                     ffValue: 0.65,
                                     accumulate: leafFunc
                                   },
                                   {
                                     func: "x_1",
-                                    nodeId: 24,
+                                    nodeId: 25,
                                     ffValue: 3,
                                     accumulate: leafFunc
                                   }
@@ -187,7 +218,7 @@ const example: Example = {
                           },
                           {
                             func: "b_1",
-                            nodeId: 25,
+                            nodeId: 26,
                             ffValue: 0.5,
                             accumulate: leafFunc
                           }
@@ -199,7 +230,7 @@ const example: Example = {
               }
             ]
           },
-          { func: "b_2", nodeId: 26, ffValue: 0.5, accumulate: leafFunc }
+          { func: "b_2", nodeId: 27, ffValue: 0.5, accumulate: leafFunc }
         ]
       }
     ]

@@ -72,13 +72,27 @@ export const translations: { [key: string]: Map<L, string> } = {
   thanks: new Map([
     [
       L.DE,
-      "Danke dass du dir Zeit für diese Übung genommen hast! Deine Ergebnisse wurden übermittelt!"
+      "Danke dass du dir Zeit für diese Übung genommen hast! Deine Ergebnisse wurden an den Server übermittelt und du wirst gleich eine Antwort erhalten!"
     ],
     [
       L.EN,
-      "Thank you for taking the time for this exercise! Your results were successfully transmitted!"
+      "Thank you for taking the time for this exercise! Your results were successfully transmitted to the server and you will receive an answer shortly!"
     ]
   ]),
+
+  resultSuccess: new Map([
+    [L.DE, "Deine Werte sind alle korrekt! Sehr gut gemacht!"],
+    [L.EN, "All your values are correct! Good job!"]
+  ]),
+
+  resultError: new Map([
+    [
+      L.DE,
+      "Die Werte sind leider nicht alle korrekt. Versuche es doch noch einmal, du hast so viele Versuche wie du brauchst."
+    ],
+    [L.EN, "Not all your values are correct. Try again and take your time!"]
+  ]),
+
   whywow: new Map([
     [
       L.DE,

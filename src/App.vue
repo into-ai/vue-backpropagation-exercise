@@ -30,11 +30,28 @@ import Example from "./examples/example2";
 export default class App extends Vue {
   protected example = Example;
 
-  handleSubmit(values: {
-    [key: string]: number;
-  }): { valid: boolean; message?: string } {
-    console.log(values);
-    return { valid: true };
+  handleSubmit(
+    result: {
+      [key: string]: number;
+    },
+    expected: {
+      [key: string]: number;
+    }
+  ): { valid: boolean; message?: string } {
+    // Automatic validation based on derivatives if available
+    if (result.length == expected.length) {
+      const valid: boolean =
+        JSON.stringify(result) === JSON.stringify(expected);
+      return {
+        valid: valid
+      };
+    }
+
+    // Handle possible validation call to your custom backend
+    return {
+      valid: false,
+      message: "Cannot auto validate. Connect your own backend!"
+    };
   }
 }
 </script>
@@ -47,5 +64,8 @@ export default class App extends Vue {
   font-size: 1em
   text-align: center
   color: #2c3e50
-  margin: 60px 0
+  margin: 60px auto
+  width: 80%
+  min-width: 800px
+  padding: 0px 20px
 </style>

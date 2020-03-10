@@ -18,6 +18,7 @@ export interface Graph {
   bpValue?: number;
   children?: Graph[];
   accumulate: (c: number[]) => number;
+  derivative?: (c: Record<string, number>) => number;
 }
 
 export class BackpropGraph implements Graph {
@@ -28,6 +29,7 @@ export class BackpropGraph implements Graph {
   bpValue?: number;
   children?: Graph[];
   accumulate: (c: number[]) => number = (): number => NaN;
+  derivative?: (c: Record<string, number>) => number;
 }
 
 export enum Step {
