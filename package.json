@@ -1,6 +1,6 @@
 {
   "name": "vue-backpropagation-exercise",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Web based exercise about visually retracing the backpropagation steps performed when training neural nets.",
   "private": false,
   "author": {
