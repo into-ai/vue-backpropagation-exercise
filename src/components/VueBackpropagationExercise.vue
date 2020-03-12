@@ -717,7 +717,6 @@ E &= {(${netOut} - ${expectedOut})}^2 \\\\
       .attr("y", `-${errorHeight / 2}px`)
       .attr("width", `${errorWidth}px`)
       .attr("height", `${errorHeight}px`)
-      .style("color", "black")
       .attr("overflow", "visible")
       .html(
         () =>
@@ -770,16 +769,24 @@ E &= {(${netOut} - ${expectedOut})}^2 \\\\
       );
     };
 
-    nodeEnter
+    const nodeEnterTrans = nodeEnter
       .transition()
       .delay(d => animationDelay(d))
       .duration(this.animationDuration)
       .attr("transform", d => {
         return "translate(" + d.y + "," + d.x + ")";
-      })
+      });
+
+    nodeEnterTrans
       .select("circle.node")
       .attr("r", this.circleRadius)
-      .style("fill", this.circleColor);
+      .style("fill", d =>
+        d.children != undefined ? this.circleColor : "white"
+      );
+
+    nodeEnterTrans
+      .select("foreignObject.externalObject")
+      .style("color", d => (d.children != undefined ? "white" : "black"));
 
     // Update the links...
     const link = this.svg
