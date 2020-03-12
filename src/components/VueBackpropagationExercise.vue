@@ -97,6 +97,7 @@ import {
   fixedNd,
   parseFloatStrict
 } from "@/utils";
+import { detect } from "detect-browser";
 import { translations } from "@/translations";
 import { Point, BackpropGraph, Language, Step } from "@/interfaces";
 export * from "@/interfaces";
@@ -417,6 +418,19 @@ export default class VueBackpropagationExercise extends Vue {
   }
 
   mounted() {
+    // Check if browser is supported
+    const browser = detect();
+    switch (browser && browser.name) {
+      case "chrome":
+      case "opera":
+      case "firefox":
+        break;
+      default:
+        alert(
+          formatString(this.tl("unsupportedBrowser"), browser?.name ?? "?")
+        );
+    }
+
     // Render the net and error functions
     const netFuncElement = document.getElementById("net-function");
     if (netFuncElement != null)

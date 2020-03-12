@@ -93,6 +93,17 @@ export const translations: { [key: string]: Map<L, string> } = {
     [L.EN, "Not all your values are correct. Try again and take your time!"]
   ]),
 
+  unsupportedBrowser: new Map([
+    [
+      L.DE,
+      "Dein Browser {0} konnte nicht als einer der getesteten Browser (Chrome, Firefox und Opera) identifiziert werden. Wenn der Graph nicht korrekt angezeigt wird solltest du vielleicht auf die neuste Version eines dieser Browser upgraden."
+    ],
+    [
+      L.EN,
+      "Could not detect your browser {0} as one of the tested browsers (Chrome, Firefox and Opera). If the graph and is not displayed properly consider upgrading to the latest version of one of these browsers."
+    ]
+  ]),
+
   whywow: new Map([
     [
       L.DE,
